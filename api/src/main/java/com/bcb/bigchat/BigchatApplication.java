@@ -1,0 +1,13 @@
+package com.bcb.bigchat;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class BigchatApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(BigchatApplication.class, args);
+	}
+
+}
