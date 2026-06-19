@@ -6,3 +6,6 @@ dist-ssr
 .env.local
 coverage
 *.log
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
