@@ -51,7 +51,7 @@ describe('useMessages', () => {
     vi.spyOn(conversationsApi, 'getMessages').mockResolvedValue([message('m1', 'Oi')])
     const sendSpy = vi
       .spyOn(messagesApi, 'sendMessage')
-      .mockResolvedValue({ messageId: 'm2', status: 'queued', cost: 0.5, currentBalance: 9.5 })
+      .mockResolvedValue({ id: 'm2', status: 'sent', timestamp: null, estimatedDelivery: null, cost: 0.5, currentBalance: 9.5 })
 
     const { result } = renderHook(() =>
       useMessages({ conversationId: 'conv-1', recipientId: 'recipient-1' }),

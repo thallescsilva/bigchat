@@ -248,6 +248,15 @@ input[aria-invalid='true'] {
   font-weight: 600;
 }
 
+.conversation-item__preview {
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
 .conversation-item__meta {
   display: flex;
   align-items: center;

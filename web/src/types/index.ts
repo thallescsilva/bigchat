@@ -25,9 +25,10 @@ export interface Client {
 
 export interface Conversation {
   id: string
-  clientId: string
   recipientId: string
-  lastMessageAt: string | null
+  recipientName: string
+  lastMessageContent: string | null
+  lastMessageTime: string | null
   unreadCount: number
 }
 
@@ -65,8 +66,10 @@ export interface Transaction {
 }
 
 export interface SendMessageResult {
-  messageId: string
+  id: string
   status: string
+  timestamp: string | null
+  estimatedDelivery: string | null
   cost: number
   currentBalance: number | null
 }

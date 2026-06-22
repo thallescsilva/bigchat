@@ -19,9 +19,12 @@ export function ConversationListItem({ conversation, active, onSelect }: Props) 
       className={`conversation-item${active ? ' conversation-item--active' : ''}`}
       onClick={() => onSelect(conversation)}
     >
-      <span className="conversation-item__recipient">{conversation.recipientId}</span>
+      <span className="conversation-item__recipient">{conversation.recipientName}</span>
+      {conversation.lastMessageContent && (
+        <span className="conversation-item__preview">{conversation.lastMessageContent}</span>
+      )}
       <span className="conversation-item__meta">
-        {formatWhen(conversation.lastMessageAt)}
+        {formatWhen(conversation.lastMessageTime)}
         {conversation.unreadCount > 0 && (
           <span className="conversation-item__badge">{conversation.unreadCount}</span>
         )}
