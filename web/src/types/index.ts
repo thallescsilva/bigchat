@@ -20,7 +20,7 @@ export interface Client {
   monthlyLimit: number
   monthlyUsage: number
   active: boolean
-  admin: boolean
+  admin?: boolean
 }
 
 export interface Conversation {
