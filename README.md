@@ -4,9 +4,6 @@ Plataforma de chat entre empresas e seus clientes finais: autenticação por CPF
 envio de mensagens com **fila priorizada** (normal/urgente), **cobrança pré-pago/pós-pago**
 e interface de chat responsiva — com **sugestão de resposta por IA** (Claude) como diferencial.
 
-> Teste técnico fullstack. Backend Java/Spring Boot, frontend React/TypeScript, PostgreSQL,
-> Docker Compose. Entrega visando todos os requisitos obrigatórios + diferenciais + IA.
-
 ---
 
 ## Stack
@@ -18,7 +15,7 @@ e interface de chat responsiva — com **sugestão de resposta por IA** (Claude)
 | Banco | PostgreSQL 16 |
 | Testes | JUnit 5 + Mockito (back), Vitest + Testing Library (front) |
 | Infra | Docker + Docker Compose (db + api + web via nginx) |
-| IA | Anthropic Claude (`claude-haiku-4-5`) com fallback gracioso |
+| IA | Anthropic Claude (`claude-haiku-4-5`) com fallback |
 
 ---
 
@@ -92,7 +89,7 @@ Login: informe o documento na tela inicial (a UI detecta CPF/CNPJ e valida os d�
 
 **Frontend — feature-folder + camada de serviço tipada.** Estado de sessão e dados via
 Context API + hooks customizados sobre Axios, com estados `loading/error/success`
-explícitos. Sem Redux/React Query (escopo pequeno; menos dependências a explicar).
+explícitos. Sem Redux/React Query.
 
 ---
 
@@ -163,7 +160,7 @@ integração (back) e validação de documento, login, envio de mensagem e badge
   SMS/WhatsApp. Por consequência, o ciclo é **outbound-only** e os estados alcançáveis são
   `QUEUED → PROCESSING → SENT` (ou `FAILED`); `DELIVERED`/`READ` ficam fora de escopo por
   não haver evento de entrega que os dispare.
-- **Sem broker/fila assíncrona** — processamento síncrono é premissa do desafio.
+- **Sem broker/fila assíncrona** — processamento síncrono é premissa.
 - **Sem atualização near-real-time** (polling/WebSocket fora de escopo).
 - O `FAILED` é alcançável de forma determinística (recipient sentinela inválido); no mock
   **não há estorno** em falha — decisão consciente, documentada aqui.
