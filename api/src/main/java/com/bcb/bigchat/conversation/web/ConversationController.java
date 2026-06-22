@@ -3,7 +3,7 @@ package com.bcb.bigchat.conversation.web;
 import com.bcb.bigchat.conversation.application.ConversationService;
 import com.bcb.bigchat.conversation.infrastructure.ConversationRepository;
 import com.bcb.bigchat.messaging.infrastructure.MessageRepository;
-import com.bcb.bigchat.messaging.domain.Message;
+import com.bcb.bigchat.messaging.web.MessageResponse;
 import com.bcb.bigchat.shared.security.AuthenticatedClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,12 +36,14 @@ public class ConversationController {
     }
 
     @GetMapping("/{id}/messages")
-    public ResponseEntity<Page<Message>> messages(
+    public ResponseEntity<Page<MessageResponse>> messages(
             @PathVariable java.util.UUID id,
             @AuthenticationPrincipal AuthenticatedClient auth,
             Pageable pageable) {
         return conversationRepository.findByIdAndClientId(id, auth.clientId())
-                .map(conv -> ResponseEntity.ok(messageRepository.findByConversationIdOrderByCreatedAtAsc(id, pageable)))
+                .map(conv -> ResponseEntity.ok(
+                        messageRepository.findByConversationIdOrderByCreatedAtAsc(id, pageable)
+                                .map(MessageResponse::from)))
                 .orElse(ResponseEntity.status(403).build());
     }
 }

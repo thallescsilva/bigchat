@@ -4,6 +4,7 @@ import com.bcb.bigchat.billing.application.BalanceAdminService;
 import com.bcb.bigchat.client.application.ClientService;
 import com.bcb.bigchat.client.domain.Client;
 import com.bcb.bigchat.client.domain.PlanType;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
@@ -24,23 +25,34 @@ public class ClientController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Client>> list() {
-        return ResponseEntity.ok(clientService.findAll());
+    public ResponseEntity<List<ClientResponse>> list() {
+        return ResponseEntity.ok(clientService.findAll().stream().map(ClientResponse::from).toList());
     }
 
     @PostMapping
-    public ResponseEntity<Client> create(@RequestBody Client client) {
-        return ResponseEntity.ok(clientService.create(client));
+    public ResponseEntity<ClientResponse> create(@Valid @RequestBody CreateClientRequest request) {
+        Client client = new Client();
+        client.setName(request.name());
+        client.setDocumentId(request.documentId());
+        client.setDocumentType(request.documentType());
+        client.setPlanType(request.planType());
+        client.setBalance(request.balance() != null ? request.balance() : BigDecimal.ZERO);
+        client.setMonthlyLimit(request.monthlyLimit() != null ? request.monthlyLimit() : BigDecimal.ZERO);
+        return ResponseEntity.ok(ClientResponse.from(clientService.create(client)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> get(@PathVariable UUID id) {
-        return ResponseEntity.ok(clientService.findById(id));
+    public ResponseEntity<ClientResponse> get(@PathVariable UUID id) {
+        return ResponseEntity.ok(ClientResponse.from(clientService.findById(id)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Client> update(@PathVariable UUID id, @RequestBody Client updates) {
-        return ResponseEntity.ok(clientService.update(id, updates));
+    public ResponseEntity<ClientResponse> update(@PathVariable UUID id, @Valid @RequestBody UpdateClientRequest request) {
+        Client updates = new Client();
+        updates.setName(request.name());
+        updates.setPlanType(request.planType());
+        updates.setMonthlyLimit(request.monthlyLimit());
+        return ResponseEntity.ok(ClientResponse.from(clientService.update(id, updates)));
     }
 
     @DeleteMapping("/{id}")

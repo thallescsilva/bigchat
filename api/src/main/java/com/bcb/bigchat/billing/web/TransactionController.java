@@ -1,6 +1,5 @@
 package com.bcb.bigchat.billing.web;
 
-import com.bcb.bigchat.billing.domain.Transaction;
 import com.bcb.bigchat.billing.infrastructure.TransactionRepository;
 import com.bcb.bigchat.shared.security.AuthenticatedClient;
 import org.springframework.data.domain.Page;
@@ -21,10 +20,15 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}/transactions")
-    public ResponseEntity<Page<Transaction>> transactions(
+    public ResponseEntity<Page<TransactionResponse>> transactions(
             @PathVariable UUID id,
             @AuthenticationPrincipal AuthenticatedClient auth,
             Pageable pageable) {
-        return ResponseEntity.ok(transactionRepository.findByClientIdOrderByCreatedAtDesc(id, pageable));
+        if (!id.equals(auth.clientId()) && !auth.admin()) {
+            return ResponseEntity.status(403).build();
+        }
+        return ResponseEntity.ok(
+                transactionRepository.findByClientIdOrderByCreatedAtDesc(id, pageable)
+                        .map(TransactionResponse::from));
     }
 }
