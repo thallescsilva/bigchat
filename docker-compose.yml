@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: ${DATABASE_USER:-bigchat}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-bigchat}
     ports:
-      - "5432:5432"
+      - "${DATABASE_HOST_PORT:-5433}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
