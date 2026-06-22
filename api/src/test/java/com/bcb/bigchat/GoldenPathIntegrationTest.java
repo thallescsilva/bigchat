@@ -6,7 +6,7 @@ import com.bcb.bigchat.client.domain.Client;
 import com.bcb.bigchat.client.domain.DocumentType;
 import com.bcb.bigchat.client.domain.PlanType;
 import com.bcb.bigchat.client.infrastructure.ClientRepository;
-import com.bcb.bigchat.conversation.domain.Conversation;
+import com.bcb.bigchat.conversation.web.ConversationResponse;
 import com.bcb.bigchat.messaging.domain.MessagePriority;
 import com.bcb.bigchat.messaging.domain.MessageType;
 import com.bcb.bigchat.messaging.web.SendMessageRequest;
@@ -57,23 +57,24 @@ class GoldenPathIntegrationTest {
         headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        SendMessageRequest normalMsg = new SendMessageRequest("recipient-1", "Hello", MessageType.SMS, MessagePriority.NORMAL);
+        SendMessageRequest normalMsg = new SendMessageRequest(null, "recipient-1", "Hello", MessageType.SMS, MessagePriority.NORMAL);
         ResponseEntity<SendMessageResponse> normalResp = restTemplate.exchange(
                 "/messages", HttpMethod.POST, new HttpEntity<>(normalMsg, headers), SendMessageResponse.class);
         assertThat(normalResp.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(normalResp.getBody().cost()).isEqualByComparingTo("0.25");
 
-        SendMessageRequest urgentMsg = new SendMessageRequest("recipient-1", "Urgent!", MessageType.SMS, MessagePriority.URGENT);
+        SendMessageRequest urgentMsg = new SendMessageRequest(null, "recipient-1", "Urgent!", MessageType.SMS, MessagePriority.URGENT);
         ResponseEntity<SendMessageResponse> urgentResp = restTemplate.exchange(
                 "/messages", HttpMethod.POST, new HttpEntity<>(urgentMsg, headers), SendMessageResponse.class);
         assertThat(urgentResp.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(urgentResp.getBody().cost()).isEqualByComparingTo("0.50");
 
-        ResponseEntity<List<Conversation>> convResp = restTemplate.exchange(
+        ResponseEntity<List<ConversationResponse>> convResp = restTemplate.exchange(
                 "/conversations", HttpMethod.GET, new HttpEntity<>(headers),
-                new ParameterizedTypeReference<List<Conversation>>() {});
+                new ParameterizedTypeReference<List<ConversationResponse>>() {});
         assertThat(convResp.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(convResp.getBody()).isNotEmpty();
+        assertThat(convResp.getBody().get(0).lastMessageContent()).isEqualTo("Urgent!");
 
         Client refreshed = clientRepository.findById(savedClient.getId()).orElseThrow();
         assertThat(refreshed.getBalance()).isEqualByComparingTo("9.25");

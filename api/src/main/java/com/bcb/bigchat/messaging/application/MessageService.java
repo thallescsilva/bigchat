@@ -45,7 +45,7 @@ public class MessageService {
             throw new InactiveClientException("Client is inactive");
         }
 
-        Conversation conversation = conversationService.resolveOrCreate(auth.clientId(), req.recipientId());
+        Conversation conversation = resolveConversation(req, auth.clientId());
 
         BigDecimal cost = req.priority().getPrice();
         billingService.chargeWithRetry(client, cost);
@@ -53,7 +53,7 @@ public class MessageService {
         Message message = new Message();
         message.setConversationId(conversation.getId());
         message.setSenderClientId(auth.clientId());
-        message.setRecipientId(req.recipientId());
+        message.setRecipientId(conversation.getRecipientId());
         message.setContent(req.content());
         message.setType(req.type());
         message.setPriority(req.priority());
@@ -67,6 +67,22 @@ public class MessageService {
         Client refreshed = clientRepository.findById(auth.clientId()).orElse(client);
         BigDecimal currentBalance = client.getPlanType() == PlanType.PREPAID ? refreshed.getBalance() : null;
 
-        return new SendMessageResponse(message.getId(), "queued", cost, currentBalance);
+        return new SendMessageResponse(
+                message.getId(),
+                message.getStatus().name().toLowerCase(),
+                message.getCreatedAt(),
+                message.getProcessedAt(),
+                cost,
+                currentBalance);
+    }
+
+    private Conversation resolveConversation(SendMessageRequest req, java.util.UUID clientId) {
+        if (req.conversationId() != null) {
+            return conversationService.findOwned(req.conversationId(), clientId);
+        }
+        if (req.recipientId() != null && !req.recipientId().isBlank()) {
+            return conversationService.resolveOrCreate(clientId, req.recipientId());
+        }
+        throw new IllegalArgumentException("conversationId or recipientId is required");
     }
 }

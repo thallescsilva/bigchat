@@ -46,7 +46,7 @@ class MessageServiceTest {
         when(clientRepository.findById(any())).thenReturn(Optional.of(client));
 
         AuthenticatedClient auth = new AuthenticatedClient(client.getId(), "doc", false);
-        SendMessageRequest req = new SendMessageRequest("recipient", "hello", MessageType.SMS, MessagePriority.NORMAL);
+        SendMessageRequest req = new SendMessageRequest(null, "recipient", "hello", MessageType.SMS, MessagePriority.NORMAL);
 
         assertThatThrownBy(() -> messageService.send(req, auth))
                 .isInstanceOf(InactiveClientException.class);
@@ -70,7 +70,7 @@ class MessageServiceTest {
         when(clientRepository.findById(clientId)).thenReturn(Optional.of(client));
 
         AuthenticatedClient auth = new AuthenticatedClient(clientId, "doc", false);
-        SendMessageRequest req = new SendMessageRequest("recipient", "hello", MessageType.SMS, MessagePriority.NORMAL);
+        SendMessageRequest req = new SendMessageRequest(null, "recipient", "hello", MessageType.SMS, MessagePriority.NORMAL);
 
         SendMessageResponse response = messageService.send(req, auth);
 
@@ -97,7 +97,7 @@ class MessageServiceTest {
         when(messageRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         AuthenticatedClient auth = new AuthenticatedClient(clientId, "doc", false);
-        SendMessageRequest req = new SendMessageRequest("recipient", "hello", MessageType.SMS, MessagePriority.URGENT);
+        SendMessageRequest req = new SendMessageRequest(null, "recipient", "hello", MessageType.SMS, MessagePriority.URGENT);
 
         SendMessageResponse response = messageService.send(req, auth);
 

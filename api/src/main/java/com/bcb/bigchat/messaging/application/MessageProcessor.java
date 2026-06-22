@@ -48,7 +48,7 @@ public class MessageProcessor {
             message.setProcessedAt(LocalDateTime.now());
             messageRepository.save(message);
 
-            conversationService.updateLastMessage(message.getConversationId());
+            conversationService.updateLastMessage(message.getConversationId(), message.getContent());
         }
     }
 }

@@ -2,6 +2,7 @@ package com.bcb.bigchat.conversation.application;
 
 import com.bcb.bigchat.conversation.domain.Conversation;
 import com.bcb.bigchat.conversation.infrastructure.ConversationRepository;
+import com.bcb.bigchat.shared.error.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,9 +27,15 @@ public class ConversationService {
                 });
     }
 
-    public void updateLastMessage(UUID conversationId) {
+    public Conversation findOwned(UUID conversationId, UUID clientId) {
+        return conversationRepository.findByIdAndClientId(conversationId, clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Conversation not found"));
+    }
+
+    public void updateLastMessage(UUID conversationId, String content) {
         conversationRepository.findById(conversationId).ifPresent(c -> {
             c.setLastMessageAt(LocalDateTime.now());
+            c.setLastMessageContent(content);
             conversationRepository.save(c);
         });
     }

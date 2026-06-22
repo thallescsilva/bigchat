@@ -22,6 +22,9 @@ public class Conversation {
     @Column(name = "last_message_at")
     private LocalDateTime lastMessageAt;
 
+    @Column(name = "last_message_content", length = 500)
+    private String lastMessageContent;
+
     @Column(name = "unread_count")
     private int unreadCount = 0;
 
@@ -45,6 +48,8 @@ public class Conversation {
     public void setRecipientId(String recipientId) { this.recipientId = recipientId; }
     public LocalDateTime getLastMessageAt() { return lastMessageAt; }
     public void setLastMessageAt(LocalDateTime lastMessageAt) { this.lastMessageAt = lastMessageAt; }
+    public String getLastMessageContent() { return lastMessageContent; }
+    public void setLastMessageContent(String lastMessageContent) { this.lastMessageContent = lastMessageContent; }
     public int getUnreadCount() { return unreadCount; }
     public void setUnreadCount(int unreadCount) { this.unreadCount = unreadCount; }
     public LocalDateTime getCreatedAt() { return createdAt; }

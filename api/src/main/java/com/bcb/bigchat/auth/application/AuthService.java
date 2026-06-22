@@ -1,6 +1,7 @@
 package com.bcb.bigchat.auth.application;
 
 import com.bcb.bigchat.auth.web.AuthResponse;
+import com.bcb.bigchat.auth.web.ClientSummary;
 import com.bcb.bigchat.client.application.DocumentValidator;
 import com.bcb.bigchat.client.domain.DocumentType;
 import com.bcb.bigchat.client.infrastructure.ClientRepository;
@@ -26,6 +27,9 @@ public class AuthService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
         documentValidator.validate(documentId, documentType);
         String token = jwtService.generateToken(client);
-        return new AuthResponse(token, client.getId(), client.getName());
+        ClientSummary summary = new ClientSummary(
+                client.getId(), client.getName(), client.getDocumentId(),
+                client.getDocumentType(), client.getPlanType(), client.isActive());
+        return new AuthResponse(token, summary);
     }
 }

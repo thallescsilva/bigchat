@@ -1,7 +1,6 @@
 package com.bcb.bigchat.conversation.web;
 
 import com.bcb.bigchat.conversation.application.ConversationService;
-import com.bcb.bigchat.conversation.domain.Conversation;
 import com.bcb.bigchat.conversation.infrastructure.ConversationRepository;
 import com.bcb.bigchat.messaging.infrastructure.MessageRepository;
 import com.bcb.bigchat.messaging.domain.Message;
@@ -30,8 +29,10 @@ public class ConversationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Conversation>> list(@AuthenticationPrincipal AuthenticatedClient auth) {
-        return ResponseEntity.ok(conversationService.listForClient(auth.clientId()));
+    public ResponseEntity<List<ConversationResponse>> list(@AuthenticationPrincipal AuthenticatedClient auth) {
+        List<ConversationResponse> conversations = conversationService.listForClient(auth.clientId())
+                .stream().map(ConversationResponse::from).toList();
+        return ResponseEntity.ok(conversations);
     }
 
     @GetMapping("/{id}/messages")

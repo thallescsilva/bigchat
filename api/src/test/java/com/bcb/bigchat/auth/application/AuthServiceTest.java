@@ -39,7 +39,9 @@ class AuthServiceTest {
         AuthResponse response = authService.authenticate("52998224725", DocumentType.CPF);
 
         assertThat(response.token()).isEqualTo("token123");
-        assertThat(response.clientId()).isEqualTo(client.getId());
+        assertThat(response.client().id()).isEqualTo(client.getId());
+        assertThat(response.client().name()).isEqualTo("Test");
+        assertThat(response.client().documentId()).isEqualTo("52998224725");
     }
 
     @Test
