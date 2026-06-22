@@ -22,6 +22,22 @@ e interface de chat responsiva — com **sugestão de resposta por IA** (Claude)
 
 ---
 
+## Interface
+
+| Login (validação CPF/CNPJ) | Chat (status + cobrança) |
+|----------------------------|--------------------------|
+| ![Login](docs/screenshots/01-login.png) | ![Chat](docs/screenshots/02-chat.png) |
+
+| Sugestão de resposta por IA | Layout responsivo (mobile) |
+|-----------------------------|----------------------------|
+| ![Sugestões de IA](docs/screenshots/03-ai-suggestions.png) | ![Mobile](docs/screenshots/04-mobile.png) |
+
+> Mensagens urgentes aparecem destacadas (laranja) com a tag `URGENTE`; cada bolha mostra
+> horário, custo e status (`Enviada`). O badge no topo reflete saldo (pré-pago) ou limite
+> restante (pós-pago). As sugestões de IA caem em modo `(offline)` quando não há `ANTHROPIC_API_KEY`.
+
+---
+
 ## Como rodar
 
 ### Com Docker (recomendado)
