@@ -55,6 +55,7 @@ export function MessageComposer({
           className="composer__suggest"
           onClick={onRequestSuggestions}
           disabled={disabled || suggestionsLoading || !canSuggest}
+          title={canSuggest ? 'Gerar sugestões a partir do histórico' : 'Envie a primeira mensagem para habilitar as sugestões'}
         >
           {suggestionsLoading ? 'Sugerindo...' : '✨ Sugerir resposta'}
         </button>
